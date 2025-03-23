@@ -3,7 +3,7 @@ Contributors: yourname
 Tags: fortnite, stats, gaming, epic games, battle royale
 Requires at least: 5.0
 Tested up to: 6.4.3
-Stable tag: 2.0
+Stable tag: 2.1
 License: GPL v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,6 +57,16 @@ No, this plugin is not affiliated with, endorsed by, or connected to Epic Games 
 3. Debug logs for troubleshooting
 
 == Changelog ==
+= 2.1 =
+* Added player avatars based on Fortnite default skins
+* Improved form layout with all elements in a single row
+* Added informative notice about PlayStation/Xbox username differences
+* Enhanced error messages for account not found issues
+* Fixed issues with some default skins not displaying properly
+* Optimized API requests with better caching
+* Visual improvements to the player info display
+* Added visual separation between player details and statistics
+* Mobile responsive improvements
 
 = 2.0 =
 * Complete rewrite to use Fortnite-API.com instead of Epic Online Services API

@@ -47,10 +47,22 @@ jQuery(document).ready(function($) {
         
         var html = '';
         
-        // Информация об игроке
-        html += '<div class="player-info">' +
+        // Информация об игроке с аватаром
+        html += '<div class="player-info">';
+		
+		console.log('Avatar URL:', stats.account.avatar);
+        
+        // Добавляем аватар, если он доступен
+        if (stats.account.avatar) {
+            html += '<div class="player-avatar">' +
+                    '<img src="' + stats.account.avatar + '" alt="' + stats.account.name + '">' +
+                    '</div>';
+        }
+        
+        html += '<div class="player-details">' +
                 '<div class="player-name">' + stats.account.name + '</div>' +
                 '<div class="player-level">Level ' + stats.account.level + '</div>' +
+                '</div>' +
                 '</div>';
         
         // Battle Pass

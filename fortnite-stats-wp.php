@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Fortnite Player Stats 
  * Description: Displays Fortnite player statistics using Fortnite-API.com
- * Version: 2.0
+ * Version: 2.1
  * Author: seo_jacky
  * Author URI: https://t.me/big_jacky
  * Plugin URI: https://github.com/seojacky/fortnite-stats-wp
@@ -23,7 +23,8 @@ function fortnite_stats_enqueue_scripts() {
     wp_enqueue_script('fortnite-stats-script', plugin_dir_url(__FILE__) . 'assets/js/script.js', array('jquery'), '2.0.0', true);
     wp_localize_script('fortnite-stats-script', 'fortniteStats', array(
         'ajaxurl' => admin_url('admin-ajax.php'),
-        'nonce' => wp_create_nonce('fortnite-stats-nonce')
+        'nonce' => wp_create_nonce('fortnite-stats-nonce'),
+        'pluginUrl' => plugin_dir_url(__FILE__) // Добавляем URL плагина для доступа к изображениям
     ));
 }
 add_action('wp_enqueue_scripts', 'fortnite_stats_enqueue_scripts');
@@ -32,37 +33,41 @@ add_action('wp_enqueue_scripts', 'fortnite_stats_enqueue_scripts');
 function fortnite_stats_shortcode() {
     ob_start();
     ?>
-    <div class="fortnite-stats-container">
-        <h2>Fortnite Player Stats</h2>
-        <form id="fortnite-stats-form" class="fortnite-stats-form">
-            <div class="form-group">
-                <label for="fortnite-username">Username:</label>
-                <input type="text" id="fortnite-username" name="username" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="fortnite-platform">Account Type:</label>
-                <select id="fortnite-platform" name="accountType" required>
-                    <option value="epic">Epic</option>
-                    <option value="psn">PlayStation</option>
-                    <option value="xbl">Xbox</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="fortnite-timewindow">Time Window:</label>
-                <select id="fortnite-timewindow" name="timeWindow">
-                    <option value="lifetime">Lifetime</option>
-                    <option value="season">Current Season</option>
-                </select>
-            </div>
-            
-            <button type="submit" class="fortnite-stats-submit">Get Stats</button>
-        </form>
+<div class="fortnite-stats-container">
+    <h2>Fortnite Player Stats</h2>
+    <form id="fortnite-stats-form" class="fortnite-stats-form">
+        <div class="form-group">
+            <label for="fortnite-username" class="visually-hidden">Username:</label>
+            <input type="text" id="fortnite-username" name="username" placeholder="Username" required>
+        </div>
         
-        <div id="fortnite-stats-results" class="fortnite-stats-results"></div>
-        <div id="fortnite-stats-error" class="fortnite-stats-error"></div>
+        <div class="form-group">
+            <label for="fortnite-platform" class="visually-hidden">Account Type:</label>
+            <select id="fortnite-platform" name="accountType" required>
+                <option value="epic">Epic</option>
+                <option value="psn">PlayStation</option>
+                <option value="xbl">Xbox</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="fortnite-timewindow" class="visually-hidden">Time Window:</label>
+            <select id="fortnite-timewindow" name="timeWindow">
+                <option value="lifetime">Lifetime</option>
+                <option value="season">Current Season</option>
+            </select>
+        </div>
+        
+        <button type="submit" class="fortnite-stats-submit">Get Stats</button>
+    </form>
+    
+    <div class="form-notice">
+        <strong>Note:</strong> For PlayStation and Xbox searches, you must use the actual PSN/Xbox Live username, which may differ from the Epic Games username.
     </div>
+    
+    <div id="fortnite-stats-results" class="fortnite-stats-results"></div>
+    <div id="fortnite-stats-error" class="fortnite-stats-error"></div>
+</div>
     <?php
     return ob_get_clean();
 }
@@ -155,6 +160,31 @@ function fortnite_stats_log($type, $message, $data = null) {
 }
 
 /**
+ * Получает изображение скина для пользователя на основе его имени
+ * 
+ * @param string $username Имя игрока Fortnite
+ * @return string URL изображения скина
+ */
+function fortnite_stats_get_default_skin_image_by_username($username) {
+    // Используем только подтвержденные доступные скины
+    $default_skins = array(
+        'CID_001_Athena_Commando_F_Default', // Ramirez
+        'CID_004_Athena_Commando_F_Default', // Wildcat
+        'CID_005_Athena_Commando_M_Default', // Spitfire
+        'CID_007_Athena_Commando_M_Default'  // Renegade
+    );
+    
+    // Используем имя пользователя для выбора скина
+    $skin_index = abs(crc32($username)) % count($default_skins);
+    $skin_id = $default_skins[$skin_index];
+    
+    // Формируем URL напрямую
+    $image_url = "https://fortnite-api.com/images/cosmetics/br/{$skin_id}/smallicon.png";
+    
+    return $image_url;
+}
+
+/**
  * Функция для получения статистики игрока
  */
 function fortnite_stats_get_player_stats($username, $accountType, $timeWindow) {
@@ -228,11 +258,14 @@ function fortnite_stats_get_player_stats($username, $accountType, $timeWindow) {
  * Форматирование данных API в структуру для отображения
  */
 function fortnite_stats_format_api_data($api_data) {
+    $username = $api_data['account']['name'] ?? '';
+    
     $result = array(
         'account' => array(
             'id' => $api_data['account']['id'] ?? '',
-            'name' => $api_data['account']['name'] ?? '',
-            'level' => $api_data['account']['level'] ?? 0
+            'name' => $username,
+            'level' => $api_data['account']['level'] ?? 0,
+            'avatar' => fortnite_stats_get_default_skin_image_by_username($username)
         ),
         'battlePass' => array(
             'level' => $api_data['battlePass']['level'] ?? 0,
@@ -442,7 +475,20 @@ function fortnite_stats_ajax_handler() {
     $player_stats = fortnite_stats_get_player_stats($username, $accountType, $timeWindow);
     
     if (isset($player_stats['error'])) {
-        wp_send_json_error(array('message' => $player_stats['error']));
+        $error_message = $player_stats['error'];
+        
+        // Улучшенные сообщения об ошибках
+        if (strpos($error_message, 'account does not exist') !== false) {
+            if ($accountType === 'psn') {
+                $error_message = 'PlayStation Network account not found. Try searching by Epic Games username instead.';
+            } elseif ($accountType === 'xbl') {
+                $error_message = 'Xbox Live account not found. Try searching by Epic Games username instead.';
+            } else {
+                $error_message = 'Account not found. Please check the username and try again.';
+            }
+        }
+        
+        wp_send_json_error(array('message' => $error_message));
         wp_die();
     }
     
