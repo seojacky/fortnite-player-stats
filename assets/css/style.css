@@ -1,18 +1,18 @@
 .fortnite-stats-container {
-    max-width: 800px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
-    font-family: 'Roboto', Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
     color: #333;
 }
 
 .fortnite-stats-form {
-    background-color: #f8f9fa;
-    padding: 25px;
+    background: #fff;
     border-radius: 8px;
-    margin-bottom: 25px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e9ecef;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-bottom: 20px;
 }
 
 .form-group {
@@ -21,128 +21,142 @@
 
 .form-group label {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 5px;
     font-weight: 600;
-    color: #495057;
+    color: #555;
 }
 
 .form-group input, 
 .form-group select {
     width: 100%;
-    padding: 12px;
-    border: 1px solid #ced4da;
+    padding: 10px;
+    border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 16px;
-    color: #495057;
-    transition: border-color 0.2s;
-}
-
-.form-group input:focus, 
-.form-group select:focus {
-    border-color: #80bdff;
-    outline: 0;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
 .fortnite-stats-submit {
-    background-color: #007bff;
+    background: #2196F3;
     color: white;
-    padding: 12px 20px;
     border: none;
+    padding: 10px 20px;
     border-radius: 4px;
     cursor: pointer;
+    min-width: 120px;
     font-size: 16px;
-    font-weight: 600;
-    transition: background-color 0.2s;
+    font-weight: 500;
 }
 
 .fortnite-stats-submit:hover {
-    background-color: #0069d9;
-}
-
-.fortnite-stats-submit:active {
-    background-color: #0062cc;
+    background: #1976D2;
 }
 
 .fortnite-stats-results {
-    display: none;
-    background-color: #fff;
-    padding: 25px;
+    background: #fff;
     border-radius: 8px;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
-    border: 1px solid #e9ecef;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 20px;
+    display: none;
 }
 
 .fortnite-stats-error {
-    display: none;
-    color: #dc3545;
-    background-color: #f8d7da;
+    background: #ffebee;
+    border-left: 4px solid #f44336;
     padding: 15px;
     margin-top: 20px;
     border-radius: 4px;
-    border: 1px solid #f5c6cb;
+    color: #c62828;
+    display: none;
 }
 
-.stats-section {
-    margin-bottom: 30px;
-}
-
-.stats-section h3 {
-    border-bottom: 2px solid #f0f0f0;
-    padding-bottom: 10px;
+.player-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 20px;
-    color: #343a40;
-    font-size: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #eee;
+}
+
+.player-name {
+    font-size: 28px;
+    font-weight: bold;
+    color: #2196F3;
+}
+
+.player-level {
+    background: #2196F3;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.battle-pass {
+    margin-bottom: 20px;
+    padding: 10px;
+    background: #e3f2fd;
+    border-radius: 6px;
+}
+
+.battle-pass h3 {
+    margin-top: 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #bbdefb;
+    color: #1976D2;
 }
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+    margin-bottom: 30px;
 }
 
-.stats-item {
-    background-color: #f8f9fa;
+.stats-card {
+    background: #f8f9fa;
     padding: 15px;
     border-radius: 6px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-.stats-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.stats-card h3 {
+    margin-top: 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #eee;
+    color: #555;
 }
 
-.stats-item .label {
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: #6c757d;
-    font-size: 14px;
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
 }
 
-.stats-item .value {
-    color: #007bff;
-    font-size: 24px;
-    font-weight: 700;
+.stat-label {
+    font-weight: 500;
+    color: #666;
+}
+
+.stat-value {
+    font-weight: bold;
+    color: #2196F3;
 }
 
 .loading {
     text-align: center;
     padding: 30px;
-    color: #6c757d;
-    font-size: 18px;
 }
 
 .loading:after {
     content: "";
     display: inline-block;
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     margin-left: 10px;
     border: 3px solid #f3f3f3;
-    border-top: 3px solid #007bff;
+    border-top: 3px solid #2196F3;
     border-radius: 50%;
     animation: spin 1s linear infinite;
     vertical-align: middle;
@@ -153,45 +167,26 @@
     100% { transform: rotate(360deg); }
 }
 
-.player-info {
-    margin-bottom: 25px;
-    text-align: center;
-}
-
-.player-info h3 {
-    font-size: 28px;
-    color: #343a40;
-    margin: 0;
-    padding: 0;
-}
-
 .cache-info {
     text-align: right;
     font-size: 12px;
-    color: #6c757d;
+    color: #999;
     margin-top: 20px;
     font-style: italic;
 }
 
-/* Адаптивность для планшетов */
-@media (max-width: 768px) {
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
 /* Адаптивность для мобильных устройств */
-@media (max-width: 576px) {
+@media (max-width: 768px) {
     .stats-grid {
         grid-template-columns: 1fr;
     }
     
-    .fortnite-stats-container {
-        padding: 10px;
+    .player-info {
+        flex-direction: column;
+        align-items: flex-start;
     }
     
-    .fortnite-stats-form,
-    .fortnite-stats-results {
-        padding: 15px;
+    .player-level {
+        margin-top: 10px;
     }
 }

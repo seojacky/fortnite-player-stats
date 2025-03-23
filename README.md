@@ -1,84 +1,68 @@
-# Fortnite Stats для WordPress
+# Fortnite Player Stats
 
-Плагин для отображения статистики игроков Fortnite на вашем WordPress сайте, использующий официальный Epic Online Services (EOS) API.
+WordPress plugin to display Fortnite player statistics using the Fortnite-API.com service.
 
-## Описание
+## Description
 
-Fortnite Stats для WordPress позволяет добавить форму на ваш сайт, через которую посетители могут проверить статистику игрока Fortnite. Плагин использует официальный EOS API для получения актуальной информации и поддерживает кэширование для снижения нагрузки на сервер.
+Fortnite Player Stats is a lightweight WordPress plugin that allows website visitors to check statistics for any Fortnite player. The plugin uses the unofficial Fortnite-API.com service to retrieve accurate and up-to-date player information.
 
-## Структура плагина
+## Features
 
-```
-fortnite-stats-wp/
-├── assets/
-│   ├── css/
-│   │   └── style.css
-│   └── js/
-│       └── script.js
-├── fortnite-stats-wp.php
-└── README.md
-```
+- Display comprehensive player statistics for Fortnite
+- Support for Solo, Duo, and Squad game modes
+- View Battle Pass level and progress
+- Track wins, K/D ratio, win rate, and more
+- Support for different account types (Epic, PlayStation, Xbox)
+- Lifetime and season statistics
+- Responsive design for all devices
+- Automatic data caching to reduce API calls
 
-## Основные возможности
+## Installation
 
-- Отображение статистики по режимам игры (соло, дуо, отряды)
-- Отображение общей статистики за все время
-- Кэширование результатов для уменьшения количества запросов к API
-- Удобная интеграция через шорткод
-- Работа с официальным EOS API
-- Адаптивный дизайн
+1. Upload the `fortnite-player-stats` folder to your `/wp-content/plugins/` directory
+2. Activate the plugin through the WordPress admin interface
+3. Go to Settings > Fortnite Player Stats to enter your API key
+4. Add the shortcode `[fortnite_stats_form]` to any page or post
 
-## Установка
+## Configuration
 
-1. Загрузите все файлы плагина в директорию `/wp-content/plugins/fortnite-stats-wp/` на вашем сервере
-2. Активируйте плагин через меню 'Плагины' в WordPress
-3. Перейдите в настройки плагина и введите ваши учетные данные EOS API
+### API Key Setup
 
-## Настройка
+1. Visit [Fortnite-API.com](https://fortnite-api.com/) and register for an account
+2. Obtain your API key
+3. Enter the API key in the plugin settings page
 
-1. В административной панели WordPress перейдите в раздел "Настройки" > "Fortnite Stats"
-2. Введите следующие данные:
-   - Client ID - идентификатор клиента EOS
-   - Client Secret - секретный ключ клиента EOS
-   - Deployment ID - идентификатор развертывания
-   - Cache Time - время кэширования в секундах (рекомендуется 900-3600)
-3. Нажмите "Сохранить изменения"
+### Cache Settings
 
-## Использование
+Adjust the cache duration to control how frequently the plugin requests new data from the API. The recommended setting is between 15-60 minutes (900-3600 seconds).
 
-1. Добавьте шорткод `[fortnite_stats_form]` на любую страницу или запись, где вы хотите отобразить форму проверки статистики
-2. Посетители могут ввести имя игрока, выбрать платформу и временное окно для просмотра статистики
-3. После отправки формы статистика отобразится под формой
+## Usage
 
-## Требования
+Simply add the `[fortnite_stats_form]` shortcode to any page or post where you want to display the Fortnite stats form. Visitors can then:
 
-* WordPress 5.0 или выше
-* PHP 7.2 или выше
+1. Enter a Fortnite username
+2. Select the account type (Epic, PlayStation, Xbox)
+3. Choose the time window (Lifetime or Current Season)
+4. View detailed statistics
 
-## Получение учетных данных EOS API
+## Troubleshooting
 
-Для работы с API вам потребуются учетные данные, которые можно получить в [Developer Portal Epic Games](https://dev.epicgames.com/portal/):
+If you encounter issues with the plugin:
 
-1. Создайте новый продукт или используйте существующий
-2. Создайте клиент для вашего продукта
-3. Получите Client ID и Client Secret
-4. Создайте Deployment ID для вашего проекта
+1. Enable debug mode in the plugin settings
+2. Check the debug logs for error messages
+3. Verify that your API key is entered correctly
+4. Ensure that the WordPress server can make outbound HTTP requests
 
-## Устранение проблем
+## Requirements
 
-1. **Ошибки авторизации при запросе к API**:
-   Убедитесь, что ваши Client ID, Client Secret и Deployment ID введены правильно. Проверьте, активирован ли ваш клиент в Developer Portal Epic Games.
+- WordPress 5.0 or higher
+- PHP 7.2 or higher
 
-2. **Игрок не найден**:
-   Убедитесь, что имя игрока введено правильно и игрок существует на указанной платформе.
+## License
 
-3. **Ошибка при обработке данных**:
-   Возможно, формат ответа от API изменился. Проверьте консоль браузера на наличие ошибок JavaScript.
+GPL v2 or later
 
-## Ограничения API
+---
 
-Обратите внимание, что API Epic Games имеет ограничения на количество запросов. Рекомендуется использовать кэширование (настраивается в административной панели) для снижения нагрузки на API.
-
-## Лицензия
-
-GPL v2 или более поздняя версия
+This plugin is not affiliated with, endorsed by, or connected to Epic Games or Fortnite.

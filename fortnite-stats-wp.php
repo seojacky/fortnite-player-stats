@@ -1,11 +1,14 @@
 <?php
 /**
- * Plugin Name: Fortnite Stats for WordPress
- * Plugin URI: https://yourwebsite.com/fortnite-stats-wp
- * Description: Displays Fortnite player statistics using Epic Online Services (EOS) API
- * Version: 1.1.0
- * Author: Your Name
- * Author URI: https://yourwebsite.com
+ * Plugin Name: Fortnite Player Stats 
+ * Description: Displays Fortnite player statistics using Fortnite-API.com
+ * Version: 2.0
+ * Author: seo_jacky
+ * Author URI: https://t.me/big_jacky
+ * Plugin URI: https://github.com/seojacky/fortnite-stats-wp
+ * GitHub Plugin URI: https://github.com/seojacky/fortnite-stats-wp
+ * Text Domain: fortnite-stats-wp
+ * Domain Path: /languages
  * License: GPL2
  */
 
@@ -16,8 +19,8 @@ if (!defined('ABSPATH')) {
 
 // Регистрация стилей и скриптов
 function fortnite_stats_enqueue_scripts() {
-    wp_enqueue_style('fortnite-stats-style', plugin_dir_url(__FILE__) . 'assets/css/style.css', array(), '1.1.0');
-    wp_enqueue_script('fortnite-stats-script', plugin_dir_url(__FILE__) . 'assets/js/script.js', array('jquery'), '1.1.0', true);
+    wp_enqueue_style('fortnite-stats-style', plugin_dir_url(__FILE__) . 'assets/css/style.css', array(), '2.0.0');
+    wp_enqueue_script('fortnite-stats-script', plugin_dir_url(__FILE__) . 'assets/js/script.js', array('jquery'), '2.0.0', true);
     wp_localize_script('fortnite-stats-script', 'fortniteStats', array(
         'ajaxurl' => admin_url('admin-ajax.php'),
         'nonce' => wp_create_nonce('fortnite-stats-nonce')
@@ -38,19 +41,19 @@ function fortnite_stats_shortcode() {
             </div>
             
             <div class="form-group">
-                <label for="fortnite-platform">Platform:</label>
-                <select id="fortnite-platform" name="platform" required>
-                    <option value="pc">PC</option>
-                    <option value="ps4">PlayStation</option>
-                    <option value="xb1">Xbox</option>
+                <label for="fortnite-platform">Account Type:</label>
+                <select id="fortnite-platform" name="accountType" required>
+                    <option value="epic">Epic</option>
+                    <option value="psn">PlayStation</option>
+                    <option value="xbl">Xbox</option>
                 </select>
             </div>
             
             <div class="form-group">
                 <label for="fortnite-timewindow">Time Window:</label>
-                <select id="fortnite-timewindow" name="timewindow">
-                    <option value="alltime">All Time</option>
-                    <option value="weekly">Weekly</option>
+                <select id="fortnite-timewindow" name="timeWindow">
+                    <option value="lifetime">Lifetime</option>
+                    <option value="season">Current Season</option>
                 </select>
             </div>
             
@@ -67,15 +70,13 @@ add_shortcode('fortnite_stats_form', 'fortnite_stats_shortcode');
 
 // Регистрация настроек плагина
 function fortnite_stats_register_settings() {
-    add_option('fortnite_stats_client_id', 'xyza7891efcel0tEJEM8cE3pcbpO4l7m');
-    add_option('fortnite_stats_client_secret', '');
-    add_option('fortnite_stats_deployment_id', 'c259c4b3ea014fdfa7eec3de9158c058');
+    add_option('fortnite_stats_api_key', '');
     add_option('fortnite_stats_cache_time', '900'); // 15 минут кэширования по умолчанию
+    add_option('fortnite_stats_debug_mode', '0'); // Режим отладки выключен по умолчанию
     
-    register_setting('fortnite_stats_options_group', 'fortnite_stats_client_id');
-    register_setting('fortnite_stats_options_group', 'fortnite_stats_client_secret');
-    register_setting('fortnite_stats_options_group', 'fortnite_stats_deployment_id');
+    register_setting('fortnite_stats_options_group', 'fortnite_stats_api_key');
     register_setting('fortnite_stats_options_group', 'fortnite_stats_cache_time');
+    register_setting('fortnite_stats_options_group', 'fortnite_stats_debug_mode');
 }
 add_action('admin_init', 'fortnite_stats_register_settings');
 
@@ -100,24 +101,25 @@ function fortnite_stats_settings_page() {
             <?php settings_fields('fortnite_stats_options_group'); ?>
             <table class="form-table">
                 <tr>
-                    <th scope="row"><label for="fortnite_stats_client_id">Client ID</label></th>
-                    <td><input type="text" id="fortnite_stats_client_id" name="fortnite_stats_client_id" value="<?php echo esc_attr(get_option('fortnite_stats_client_id')); ?>" class="regular-text" required /></td>
-                </tr>
-                <tr>
-                    <th scope="row"><label for="fortnite_stats_client_secret">Client Secret</label></th>
-                    <td><input type="password" id="fortnite_stats_client_secret" name="fortnite_stats_client_secret" value="<?php echo esc_attr(get_option('fortnite_stats_client_secret')); ?>" class="regular-text" required /></td>
-                </tr>
-                <tr>
-                    <th scope="row"><label for="fortnite_stats_deployment_id">Deployment ID</label></th>
-                    <td><input type="text" id="fortnite_stats_deployment_id" name="fortnite_stats_deployment_id" value="<?php echo esc_attr(get_option('fortnite_stats_deployment_id')); ?>" class="regular-text" required /></td>
+                    <th scope="row"><label for="fortnite_stats_api_key">API Key</label></th>
+                    <td><input type="text" id="fortnite_stats_api_key" name="fortnite_stats_api_key" value="<?php echo esc_attr(get_option('fortnite_stats_api_key')); ?>" class="regular-text" required /></td>
                 </tr>
                 <tr>
                     <th scope="row"><label for="fortnite_stats_cache_time">Cache Time (seconds)</label></th>
                     <td><input type="number" id="fortnite_stats_cache_time" name="fortnite_stats_cache_time" value="<?php echo esc_attr(get_option('fortnite_stats_cache_time')); ?>" class="regular-text" required /></td>
                 </tr>
+                <tr>
+                    <th scope="row"><label for="fortnite_stats_debug_mode">Debug Mode</label></th>
+                    <td>
+                        <label for="fortnite_stats_debug_mode">
+                            <input type="checkbox" id="fortnite_stats_debug_mode" name="fortnite_stats_debug_mode" value="1" <?php checked(get_option('fortnite_stats_debug_mode'), '1'); ?> />
+                            Enable debug logs
+                        </label>
+                    </td>
+                </tr>
             </table>
             <p class="description">
-                Введите учетные данные Epic Online Services (EOS) для доступа к API. Вы можете получить эти данные в <a href="https://dev.epicgames.com/portal/" target="_blank">Developer Portal</a>.
+                Введите API Key для доступа к Fortnite-API.com. Вы можете получить ключ на сайте <a href="https://fortnite-api.com/" target="_blank">Fortnite-API.com</a>.
             </p>
             <p><strong>Примечание:</strong> Время кэширования указывается в секундах. Рекомендуется значение от 300 (5 минут) до 3600 (1 час), чтобы уменьшить нагрузку на API.</p>
             <?php submit_button(); ?>
@@ -126,320 +128,283 @@ function fortnite_stats_settings_page() {
     <?php
 }
 
-// Функция для получения авторизационного токена
-function fortnite_stats_get_auth_token() {
-    $client_id = get_option('fortnite_stats_client_id');
-    $client_secret = get_option('fortnite_stats_client_secret');
-    $deployment_id = get_option('fortnite_stats_deployment_id');
-    
-    // Проверяем существующий токен в transients
-    $auth_token = get_transient('fortnite_stats_auth_token');
-    if ($auth_token !== false) {
-        return $auth_token;
+/**
+ * Логирование для отладки
+ */
+function fortnite_stats_log($type, $message, $data = null) {
+    if (get_option('fortnite_stats_debug_mode') != '1') {
+        return;
     }
     
-    // Формируем запрос на получение токена
-    $auth_url = 'https://api.epicgames.dev/auth/v2/oauth/token';
-    $auth_headers = array(
-        'Content-Type' => 'application/x-www-form-urlencoded',
-        'Authorization' => 'Basic ' . base64_encode($client_id . ':' . $client_secret)
+    $log_entry = array(
+        'time' => date('Y-m-d H:i:s'),
+        'type' => $type,
+        'message' => $message,
+        'data' => $data
     );
     
-    $auth_body = array(
-        'grant_type' => 'client_credentials',
-        'deployment_id' => $deployment_id
-    );
+    $logs = get_option('fortnite_stats_debug_logs', array());
+    $logs[] = $log_entry;
     
-    $auth_response = wp_remote_post($auth_url, array(
-        'headers' => $auth_headers,
-        'body' => $auth_body,
+    // Ограничение количества записей в логе
+    if (count($logs) > 100) {
+        $logs = array_slice($logs, -100);
+    }
+    
+    update_option('fortnite_stats_debug_logs', $logs);
+}
+
+/**
+ * Функция для получения статистики игрока
+ */
+function fortnite_stats_get_player_stats($username, $accountType, $timeWindow) {
+    $api_key = get_option('fortnite_stats_api_key');
+    
+    if (empty($api_key)) {
+        fortnite_stats_log('error', 'API key is not set');
+        return array('error' => 'API key is not set. Please configure the plugin in admin settings.');
+    }
+    
+    fortnite_stats_log('info', "Getting stats for player: {$username}, account type: {$accountType}, time window: {$timeWindow}");
+    
+    // URL для Fortnite API с правильными параметрами
+    $url = "https://fortnite-api.com/v2/stats/br/v2?name=" . urlencode($username) . 
+           "&accountType=" . urlencode($accountType) . 
+           "&timeWindow=" . urlencode($timeWindow);
+    
+    fortnite_stats_log('debug', 'Stats request URL', $url);
+    
+    $response = wp_remote_get($url, array(
+        'headers' => array(
+            'Authorization' => $api_key
+        ),
         'timeout' => 15
     ));
     
-    // Проверяем ответ
-    if (is_wp_error($auth_response)) {
-        return array('error' => $auth_response->get_error_message());
+    if (is_wp_error($response)) {
+        fortnite_stats_log('error', 'WP error during stats retrieval', $response->get_error_message());
+        return array('error' => "Error: " . $response->get_error_message());
     }
     
-    $auth_body = wp_remote_retrieve_body($auth_response);
-    $auth_data = json_decode($auth_body, true);
+    $status = wp_remote_retrieve_response_code($response);
+    $body = wp_remote_retrieve_body($response);
     
-    if (isset($auth_data['error'])) {
-        return array('error' => $auth_data['error_description'] ?? $auth_data['error']);
+    fortnite_stats_log('debug', 'API response status', $status);
+    
+    $stats_data = json_decode($body, true);
+    
+    if ($status != 200 || !isset($stats_data['data'])) {
+        $error_message = 'Failed to retrieve stats';
+        
+        if (isset($stats_data['error'])) {
+            if (is_string($stats_data['error'])) {
+                $error_message = $stats_data['error'];
+            } elseif (isset($stats_data['error']['message'])) {
+                $error_message = $stats_data['error']['message'];
+            }
+        }
+        
+        fortnite_stats_log('error', 'Stats retrieval failed', array(
+            'status' => $status,
+            'error' => $error_message,
+            'response' => $stats_data
+        ));
+        
+        return array(
+            'error' => $error_message,
+            'status' => $status
+        );
     }
     
-    if (empty($auth_data['access_token'])) {
-        return array('error' => 'Failed to get access token');
-    }
+    // Форматируем данные статистики
+    $formatted_stats = fortnite_stats_format_api_data($stats_data['data']);
     
-    // Сохраняем токен в transients (на 50 минут, обычный срок жизни 1 час)
-    set_transient('fortnite_stats_auth_token', $auth_data['access_token'], 3000);
+    fortnite_stats_log('success', 'Stats retrieved successfully', $formatted_stats);
     
-    return $auth_data['access_token'];
+    return $formatted_stats;
 }
 
-// Функция для конвертации времени из минут в человекочитаемый формат
-function fortnite_stats_time_convert($minutes) {
-    if (!$minutes || !is_numeric($minutes)) {
-        return '0m';
-    }
-    
-    $result = '';
-    $d = intval($minutes / 24 / 60);
-    $h = intval(($minutes / 60) % 24);
-    $m = intval($minutes % 60);
-    
-    if ($d > 0) {
-        $result .= $d . 'd ';
-    }
-    if ($h > 0) {
-        $result .= $h . 'h ';
-    }
-    if ($m > 0) {
-        $result .= $m . 'm';
-    }
-    else if ($result === '') {
-        $result = '0m';
-    }
-    
-    return trim($result);
-}
-
-// Функция для расчета соотношений
-function fortnite_stats_ratio($a, $b) {
-    if (intval($b) === 0) {
-        return 0;
-    }
-    return number_format(intval($a) / intval($b), 2);
-}
-
-function fortnite_stats_rate($a, $b) {
-    if (intval($b) === 0) {
-        return 0;
-    }
-    return number_format((intval($a) / intval($b)) * 100, 2);
-}
-
-// Функция для конвертации статистики в нужный формат
-function fortnite_stats_convert_stats($stats, $user, $platform) {
+/**
+ * Форматирование данных API в структуру для отображения
+ */
+function fortnite_stats_format_api_data($api_data) {
     $result = array(
-        'group' => array(
-            'solo' => array(
-                'wins' => 0,
-                'top3' => 0,
-                'top5' => 0,
-                'top6' => 0,
-                'top10' => 0,
-                'top12' => 0,
-                'top25' => 0,
-                'k/d' => 0,
-                'win%' => 0,
-                'matches' => 0,
-                'kills' => 0,
-                'timePlayed' => 0,
-                'killsPerMatch' => 0,
-                'killsPerMin' => 0,
-                'score' => 0,
-            ),
-            'duo' => array(
-                'wins' => 0,
-                'top3' => 0,
-                'top5' => 0,
-                'top6' => 0,
-                'top10' => 0,
-                'top12' => 0,
-                'top25' => 0,
-                'k/d' => 0,
-                'win%' => 0,
-                'matches' => 0,
-                'kills' => 0,
-                'timePlayed' => 0,
-                'killsPerMatch' => 0,
-                'killsPerMin' => 0,
-                'score' => 0,
-            ),
-            'squad' => array(
-                'wins' => 0,
-                'top3' => 0,
-                'top5' => 0,
-                'top6' => 0,
-                'top10' => 0,
-                'top12' => 0,
-                'top25' => 0,
-                'k/d' => 0,
-                'win%' => 0,
-                'matches' => 0,
-                'kills' => 0,
-                'timePlayed' => 0,
-                'killsPerMatch' => 0,
-                'killsPerMin' => 0,
-                'score' => 0,
-            ),
+        'account' => array(
+            'id' => $api_data['account']['id'] ?? '',
+            'name' => $api_data['account']['name'] ?? '',
+            'level' => $api_data['account']['level'] ?? 0
         ),
-        'info' => array(
-            'accountId' => $user['accountId'] ?? $user['id'] ?? '',
-            'username' => $user['displayName'] ?? $user['username'] ?? '',
-            'platform' => $platform,
+        'battlePass' => array(
+            'level' => $api_data['battlePass']['level'] ?? 0,
+            'progress' => $api_data['battlePass']['progress'] ?? 0
         ),
-        'lifetimeStats' => array(
-            'wins' => 0,
-            'top3s' => 0,
-            'top5s' => 0,
-            'top6s' => 0,
-            'top10s' => 0,
-            'top12s' => 0,
-            'top25s' => 0,
-            'k/d' => 0,
-            'win%' => 0,
-            'matches' => 0,
-            'kills' => 0,
-            'killsPerMin' => 0,
-            'timePlayed' => 0,
-            'score' => 0,
+        'wins' => array(
+            'solo' => 0,
+            'duo' => 0,
+            'squad' => 0,
+            'ltm' => 0,
+            'total' => 0
         ),
+        'matches' => array(
+            'solo' => 0,
+            'duo' => 0,
+            'squad' => 0,
+            'ltm' => 0,
+            'total' => 0
+        ),
+        'kd' => array(
+            'solo' => 0,
+            'duo' => 0,
+            'squad' => 0,
+            'ltm' => 0,
+            'total' => 0
+        ),
+        'winRate' => array(
+            'solo' => 0,
+            'duo' => 0,
+            'squad' => 0,
+            'ltm' => 0,
+            'total' => 0
+        ),
+        'kills' => array(
+            'solo' => 0,
+            'duo' => 0,
+            'squad' => 0,
+            'ltm' => 0,
+            'total' => 0
+        ),
+        'deaths' => array(
+            'solo' => 0,
+            'duo' => 0,
+            'squad' => 0,
+            'ltm' => 0,
+            'total' => 0
+        ),
+        'minutesPlayed' => array(
+            'solo' => 0,
+            'duo' => 0,
+            'squad' => 0,
+            'ltm' => 0,
+            'total' => 0
+        ),
+        'scorePerMatch' => array(
+            'solo' => 0,
+            'duo' => 0,
+            'squad' => 0,
+            'ltm' => 0,
+            'total' => 0
+        ),
+        'scorePerMin' => array(
+            'solo' => 0,
+            'duo' => 0,
+            'squad' => 0,
+            'ltm' => 0,
+            'total' => 0
+        ),
+        'lastModified' => $api_data['stats']['lastModified'] ?? null
     );
-
-    // Проверяем наличие данных в ответе
-    if (!$stats || empty($stats['stats'])) {
-        return $result;
+    
+    // Обработка статистики для каждого типа ввода и комбинирование
+    if (isset($api_data['stats'])) {
+        $stats = $api_data['stats'];
+        foreach (['keyboardMouse', 'gamepad', 'touch', 'all'] as $inputType) {
+            if (isset($stats[$inputType])) {
+                $inputStats = $stats[$inputType];
+                
+                // Обработка общей статистики
+                if (isset($inputStats['overall'])) {
+                    $result['wins']['total'] += $inputStats['overall']['wins'] ?? 0;
+                    $result['matches']['total'] += $inputStats['overall']['matches'] ?? 0;
+                    $result['kills']['total'] += $inputStats['overall']['kills'] ?? 0;
+                    $result['deaths']['total'] += $inputStats['overall']['deaths'] ?? 0;
+                    $result['minutesPlayed']['total'] += $inputStats['overall']['minutesPlayed'] ?? 0;
+                    
+                    // Берем максимальное значение для рейтинговых показателей
+                    $result['kd']['total'] = max($result['kd']['total'], $inputStats['overall']['kd'] ?? 0);
+                    $result['winRate']['total'] = max($result['winRate']['total'], $inputStats['overall']['winRate'] ?? 0);
+                    $result['scorePerMatch']['total'] = max($result['scorePerMatch']['total'], $inputStats['overall']['scorePerMatch'] ?? 0);
+                    $result['scorePerMin']['total'] = max($result['scorePerMin']['total'], $inputStats['overall']['scorePerMin'] ?? 0);
+                }
+                
+                // Обработка соло статистики
+                if (isset($inputStats['solo'])) {
+                    $result['wins']['solo'] += $inputStats['solo']['wins'] ?? 0;
+                    $result['matches']['solo'] += $inputStats['solo']['matches'] ?? 0;
+                    $result['kills']['solo'] += $inputStats['solo']['kills'] ?? 0;
+                    $result['deaths']['solo'] += $inputStats['solo']['deaths'] ?? 0;
+                    $result['minutesPlayed']['solo'] += $inputStats['solo']['minutesPlayed'] ?? 0;
+                    
+                    $result['kd']['solo'] = max($result['kd']['solo'], $inputStats['solo']['kd'] ?? 0);
+                    $result['winRate']['solo'] = max($result['winRate']['solo'], $inputStats['solo']['winRate'] ?? 0);
+                    $result['scorePerMatch']['solo'] = max($result['scorePerMatch']['solo'], $inputStats['solo']['scorePerMatch'] ?? 0);
+                    $result['scorePerMin']['solo'] = max($result['scorePerMin']['solo'], $inputStats['solo']['scorePerMin'] ?? 0);
+                }
+                
+                // Обработка дуо статистики
+                if (isset($inputStats['duo'])) {
+                    $result['wins']['duo'] += $inputStats['duo']['wins'] ?? 0;
+                    $result['matches']['duo'] += $inputStats['duo']['matches'] ?? 0;
+                    $result['kills']['duo'] += $inputStats['duo']['kills'] ?? 0;
+                    $result['deaths']['duo'] += $inputStats['duo']['deaths'] ?? 0;
+                    $result['minutesPlayed']['duo'] += $inputStats['duo']['minutesPlayed'] ?? 0;
+                    
+                    $result['kd']['duo'] = max($result['kd']['duo'], $inputStats['duo']['kd'] ?? 0);
+                    $result['winRate']['duo'] = max($result['winRate']['duo'], $inputStats['duo']['winRate'] ?? 0);
+                    $result['scorePerMatch']['duo'] = max($result['scorePerMatch']['duo'], $inputStats['duo']['scorePerMatch'] ?? 0);
+                    $result['scorePerMin']['duo'] = max($result['scorePerMin']['duo'], $inputStats['duo']['scorePerMin'] ?? 0);
+                }
+                
+                // Обработка статистики отрядов
+                if (isset($inputStats['squad'])) {
+                    $result['wins']['squad'] += $inputStats['squad']['wins'] ?? 0;
+                    $result['matches']['squad'] += $inputStats['squad']['matches'] ?? 0;
+                    $result['kills']['squad'] += $inputStats['squad']['kills'] ?? 0;
+                    $result['deaths']['squad'] += $inputStats['squad']['deaths'] ?? 0;
+                    $result['minutesPlayed']['squad'] += $inputStats['squad']['minutesPlayed'] ?? 0;
+                    
+                    $result['kd']['squad'] = max($result['kd']['squad'], $inputStats['squad']['kd'] ?? 0);
+                    $result['winRate']['squad'] = max($result['winRate']['squad'], $inputStats['squad']['winRate'] ?? 0);
+                    $result['scorePerMatch']['squad'] = max($result['scorePerMatch']['squad'], $inputStats['squad']['scorePerMatch'] ?? 0);
+                    $result['scorePerMin']['squad'] = max($result['scorePerMin']['squad'], $inputStats['squad']['scorePerMin'] ?? 0);
+                }
+                
+                // Обработка LTM статистики
+                if (isset($inputStats['ltm'])) {
+                    $result['wins']['ltm'] += $inputStats['ltm']['wins'] ?? 0;
+                    $result['matches']['ltm'] += $inputStats['ltm']['matches'] ?? 0;
+                    $result['kills']['ltm'] += $inputStats['ltm']['kills'] ?? 0;
+                    $result['deaths']['ltm'] += $inputStats['ltm']['deaths'] ?? 0;
+                    $result['minutesPlayed']['ltm'] += $inputStats['ltm']['minutesPlayed'] ?? 0;
+                    
+                    $result['kd']['ltm'] = max($result['kd']['ltm'], $inputStats['ltm']['kd'] ?? 0);
+                    $result['winRate']['ltm'] = max($result['winRate']['ltm'], $inputStats['ltm']['winRate'] ?? 0);
+                    $result['scorePerMatch']['ltm'] = max($result['scorePerMatch']['ltm'], $inputStats['ltm']['scorePerMatch'] ?? 0);
+                    $result['scorePerMin']['ltm'] = max($result['scorePerMin']['ltm'], $inputStats['ltm']['scorePerMin'] ?? 0);
+                }
+            }
+        }
     }
-
-    // Извлекаем данные из формата API
-    $gameStats = $stats['stats'];
-    
-    // Заполняем статистику для соло режима
-    if (!empty($gameStats['br_solo'])) {
-        $result['group']['solo']['wins'] = $gameStats['br_solo']['placetop1'] ?? 0;
-        $result['group']['solo']['top3'] = $gameStats['br_solo']['placetop3'] ?? 0;
-        $result['group']['solo']['top5'] = $gameStats['br_solo']['placetop5'] ?? 0;
-        $result['group']['solo']['top10'] = $gameStats['br_solo']['placetop10'] ?? 0;
-        $result['group']['solo']['top25'] = $gameStats['br_solo']['placetop25'] ?? 0;
-        $result['group']['solo']['matches'] = $gameStats['br_solo']['matchesplayed'] ?? 0;
-        $result['group']['solo']['kills'] = $gameStats['br_solo']['kills'] ?? 0;
-        $result['group']['solo']['timePlayed'] = $gameStats['br_solo']['minutesplayed'] ?? 0;
-        $result['group']['solo']['score'] = $gameStats['br_solo']['score'] ?? 0;
-        
-        // Расчет дополнительных метрик
-        $result['group']['solo']['k/d'] = fortnite_stats_ratio(
-            $result['group']['solo']['kills'],
-            $result['group']['solo']['matches'] - $result['group']['solo']['wins']
-        );
-        $result['group']['solo']['win%'] = fortnite_stats_rate($result['group']['solo']['wins'], $result['group']['solo']['matches']);
-        $result['group']['solo']['killsPerMin'] = fortnite_stats_ratio(
-            $result['group']['solo']['kills'],
-            $result['group']['solo']['timePlayed']
-        );
-        $result['group']['solo']['killsPerMatch'] = fortnite_stats_ratio(
-            $result['group']['solo']['kills'],
-            $result['group']['solo']['matches']
-        );
-        $result['group']['solo']['timePlayed'] = fortnite_stats_time_convert($result['group']['solo']['timePlayed']);
-    }
-    
-    // Заполняем статистику для дуо режима
-    if (!empty($gameStats['br_duo'])) {
-        $result['group']['duo']['wins'] = $gameStats['br_duo']['placetop1'] ?? 0;
-        $result['group']['duo']['top3'] = $gameStats['br_duo']['placetop3'] ?? 0;
-        $result['group']['duo']['top5'] = $gameStats['br_duo']['placetop5'] ?? 0;
-        $result['group']['duo']['top10'] = $gameStats['br_duo']['placetop10'] ?? 0;
-        $result['group']['duo']['top12'] = $gameStats['br_duo']['placetop12'] ?? 0;
-        $result['group']['duo']['matches'] = $gameStats['br_duo']['matchesplayed'] ?? 0;
-        $result['group']['duo']['kills'] = $gameStats['br_duo']['kills'] ?? 0;
-        $result['group']['duo']['timePlayed'] = $gameStats['br_duo']['minutesplayed'] ?? 0;
-        $result['group']['duo']['score'] = $gameStats['br_duo']['score'] ?? 0;
-        
-        // Расчет дополнительных метрик
-        $result['group']['duo']['k/d'] = fortnite_stats_ratio(
-            $result['group']['duo']['kills'],
-            $result['group']['duo']['matches'] - $result['group']['duo']['wins']
-        );
-        $result['group']['duo']['win%'] = fortnite_stats_rate($result['group']['duo']['wins'], $result['group']['duo']['matches']);
-        $result['group']['duo']['killsPerMin'] = fortnite_stats_ratio(
-            $result['group']['duo']['kills'],
-            $result['group']['duo']['timePlayed']
-        );
-        $result['group']['duo']['killsPerMatch'] = fortnite_stats_ratio(
-            $result['group']['duo']['kills'],
-            $result['group']['duo']['matches']
-        );
-        $result['group']['duo']['timePlayed'] = fortnite_stats_time_convert($result['group']['duo']['timePlayed']);
-    }
-    
-    // Заполняем статистику для сквад режима
-    if (!empty($gameStats['br_squad'])) {
-        $result['group']['squad']['wins'] = $gameStats['br_squad']['placetop1'] ?? 0;
-        $result['group']['squad']['top3'] = $gameStats['br_squad']['placetop3'] ?? 0;
-        $result['group']['squad']['top6'] = $gameStats['br_squad']['placetop6'] ?? 0;
-        $result['group']['squad']['top10'] = $gameStats['br_squad']['placetop10'] ?? 0;
-        $result['group']['squad']['matches'] = $gameStats['br_squad']['matchesplayed'] ?? 0;
-        $result['group']['squad']['kills'] = $gameStats['br_squad']['kills'] ?? 0;
-        $result['group']['squad']['timePlayed'] = $gameStats['br_squad']['minutesplayed'] ?? 0;
-        $result['group']['squad']['score'] = $gameStats['br_squad']['score'] ?? 0;
-        
-        // Расчет дополнительных метрик
-        $result['group']['squad']['k/d'] = fortnite_stats_ratio(
-            $result['group']['squad']['kills'],
-            $result['group']['squad']['matches'] - $result['group']['squad']['wins']
-        );
-        $result['group']['squad']['win%'] = fortnite_stats_rate($result['group']['squad']['wins'], $result['group']['squad']['matches']);
-        $result['group']['squad']['killsPerMin'] = fortnite_stats_ratio(
-            $result['group']['squad']['kills'],
-            $result['group']['squad']['timePlayed']
-        );
-        $result['group']['squad']['killsPerMatch'] = fortnite_stats_ratio(
-            $result['group']['squad']['kills'],
-            $result['group']['squad']['matches']
-        );
-        $result['group']['squad']['timePlayed'] = fortnite_stats_time_convert($result['group']['squad']['timePlayed']);
-    }
-    
-    // Рассчитываем общую статистику
-    $totalTime = ($gameStats['br_solo']['minutesplayed'] ?? 0) + 
-                 ($gameStats['br_duo']['minutesplayed'] ?? 0) + 
-                 ($gameStats['br_squad']['minutesplayed'] ?? 0);
-                 
-    $result['lifetimeStats']['wins'] = 
-        $result['group']['solo']['wins'] + $result['group']['duo']['wins'] + $result['group']['squad']['wins'];
-    $result['lifetimeStats']['top3s'] = 
-        $result['group']['solo']['top3'] + $result['group']['duo']['top3'] + $result['group']['squad']['top3'];
-    $result['lifetimeStats']['top5s'] = 
-        $result['group']['solo']['top5'] + $result['group']['duo']['top5'] + 0; // В squad нет top5
-    $result['lifetimeStats']['top6s'] = 
-        ($result['group']['solo']['top6'] ?? 0) + ($result['group']['duo']['top6'] ?? 0) + $result['group']['squad']['top6'];
-    $result['lifetimeStats']['top10s'] = 
-        $result['group']['solo']['top10'] + $result['group']['duo']['top10'] + $result['group']['squad']['top10'];
-    $result['lifetimeStats']['top12s'] = 
-        ($result['group']['solo']['top12'] ?? 0) + $result['group']['duo']['top12'] + 0; // В squad нет top12
-    $result['lifetimeStats']['top25s'] = 
-        $result['group']['solo']['top25'] + ($result['group']['duo']['top25'] ?? 0) + 0; // В squad нет top25
-    $result['lifetimeStats']['matches'] = 
-        $result['group']['solo']['matches'] + $result['group']['duo']['matches'] + $result['group']['squad']['matches'];
-    $result['lifetimeStats']['kills'] = 
-        $result['group']['solo']['kills'] + $result['group']['duo']['kills'] + $result['group']['squad']['kills'];
-    $result['lifetimeStats']['score'] = 
-        $result['group']['solo']['score'] + $result['group']['duo']['score'] + $result['group']['squad']['score'];
-    $result['lifetimeStats']['timePlayed'] = $totalTime;
-    
-    // Расчет общих метрик
-    $result['lifetimeStats']['k/d'] = fortnite_stats_ratio(
-        $result['lifetimeStats']['kills'],
-        $result['lifetimeStats']['matches'] - $result['lifetimeStats']['wins']
-    );
-    $result['lifetimeStats']['win%'] = fortnite_stats_rate(
-        $result['lifetimeStats']['wins'],
-        $result['lifetimeStats']['matches']
-    );
-    $result['lifetimeStats']['killsPerMin'] = fortnite_stats_ratio(
-        $result['lifetimeStats']['kills'],
-        $totalTime
-    );
-    $result['lifetimeStats']['killsPerMatch'] = fortnite_stats_ratio(
-        $result['lifetimeStats']['kills'],
-        $result['lifetimeStats']['matches']
-    );
-    $result['lifetimeStats']['timePlayed'] = fortnite_stats_time_convert($totalTime);
     
     return $result;
+}
+
+/**
+ * Функция для форматирования времени игры
+ */
+function fortnite_stats_format_time($minutes) {
+    if (!$minutes) return '0m';
+    
+    $hours = floor($minutes / 60);
+    $mins = $minutes % 60;
+    $days = floor($hours / 24);
+    $hours = $hours % 24;
+    
+    $result = '';
+    if ($days > 0) $result .= $days . 'd ';
+    if ($hours > 0) $result .= $hours . 'h ';
+    if ($mins > 0) $result .= $mins . 'm';
+    
+    return trim($result);
 }
 
 // Обработка AJAX запроса
@@ -452,8 +417,8 @@ function fortnite_stats_ajax_handler() {
     
     // Получение параметров
     $username = isset($_POST['username']) ? sanitize_text_field($_POST['username']) : '';
-    $platform = isset($_POST['platform']) ? sanitize_text_field($_POST['platform']) : 'pc';
-    $timewindow = isset($_POST['timewindow']) ? sanitize_text_field($_POST['timewindow']) : 'alltime';
+    $accountType = isset($_POST['accountType']) ? sanitize_text_field($_POST['accountType']) : 'epic';
+    $timeWindow = isset($_POST['timeWindow']) ? sanitize_text_field($_POST['timeWindow']) : 'lifetime';
     
     if (empty($username)) {
         wp_send_json_error(array('message' => 'Username is required'));
@@ -461,79 +426,87 @@ function fortnite_stats_ajax_handler() {
     }
     
     // Проверка кэша
-    $cache_key = 'fortnite_stats_' . md5($username . '_' . $platform . '_' . $timewindow);
+    $cache_key = 'fortnite_stats_' . md5($username . '_' . $accountType . '_' . $timeWindow);
     $cache_time = intval(get_option('fortnite_stats_cache_time', 900));
     $cached_data = get_transient($cache_key);
     
     if ($cached_data !== false) {
         $cached_data['cached'] = true;
         $cached_data['cacheTime'] = time();
+        fortnite_stats_log('info', 'Returning cached data for ' . $username);
         wp_send_json_success($cached_data);
         wp_die();
     }
     
-    // Получение токена авторизации
-    $auth_token = fortnite_stats_get_auth_token();
+    // Получение данных игрока
+    $player_stats = fortnite_stats_get_player_stats($username, $accountType, $timeWindow);
     
-    if (is_array($auth_token) && isset($auth_token['error'])) {
-        wp_send_json_error(array('message' => 'Authentication error: ' . $auth_token['error']));
+    if (isset($player_stats['error'])) {
+        wp_send_json_error(array('message' => $player_stats['error']));
         wp_die();
     }
-    
-    // Поиск пользователя по имени
-    $lookup_url = 'https://api.epicgames.dev/epic/id/v2/accounts?displayName=' . urlencode($username);
-    $lookup_response = wp_remote_get($lookup_url, array(
-        'headers' => array(
-            'Authorization' => 'Bearer ' . $auth_token
-        ),
-        'timeout' => 15
-    ));
-    
-    if (is_wp_error($lookup_response)) {
-        wp_send_json_error(array('message' => 'Error finding player: ' . $lookup_response->get_error_message()));
-        wp_die();
-    }
-    
-    $lookup_body = wp_remote_retrieve_body($lookup_response);
-    $lookup_data = json_decode($lookup_body, true);
-    
-    if (empty($lookup_data) || !is_array($lookup_data) || count($lookup_data) === 0) {
-        wp_send_json_error(array('message' => 'Player not found'));
-        wp_die();
-    }
-    
-    $account_id = $lookup_data[0]['accountId'];
-    
-    // Получение статистики игрока
-    $stats_url = "https://api.epicgames.dev/fortnite/v2/stats/{$account_id}/{$platform}/{$timewindow}";
-    $stats_response = wp_remote_get($stats_url, array(
-        'headers' => array(
-            'Authorization' => 'Bearer ' . $auth_token
-        ),
-        'timeout' => 15
-    ));
-    
-    if (is_wp_error($stats_response)) {
-        wp_send_json_error(array('message' => 'Error fetching stats: ' . $stats_response->get_error_message()));
-        wp_die();
-    }
-    
-    $stats_body = wp_remote_retrieve_body($stats_response);
-    $stats_data = json_decode($stats_body, true);
-    
-    if (isset($stats_data['error'])) {
-        wp_send_json_error(array('message' => 'API Error: ' . ($stats_data['errorMessage'] ?? $stats_data['error'])));
-        wp_die();
-    }
-    
-    // Преобразуем статистику в нужный формат
-    $formatted_stats = fortnite_stats_convert_stats($stats_data, $lookup_data[0], $platform);
     
     // Сохраняем в кэш
-    set_transient($cache_key, $formatted_stats, $cache_time);
+    set_transient($cache_key, $player_stats, $cache_time);
     
-    wp_send_json_success($formatted_stats);
+    wp_send_json_success($player_stats);
     wp_die();
 }
 add_action('wp_ajax_fortnite_stats', 'fortnite_stats_ajax_handler');
 add_action('wp_ajax_nopriv_fortnite_stats', 'fortnite_stats_ajax_handler');
+
+// Добавление страницы отладки (только для админов)
+function fortnite_stats_debug_page() {
+    if (!current_user_can('manage_options')) {
+        return;
+    }
+    
+    // Очистка логов, если запрошено
+    if (isset($_POST['clear_logs']) && check_admin_referer('fortnite_stats_clear_logs')) {
+        delete_option('fortnite_stats_debug_logs');
+        echo '<div class="notice notice-success"><p>Debug logs cleared successfully.</p></div>';
+    }
+    
+    // Получение логов
+    $logs = get_option('fortnite_stats_debug_logs', array());
+    ?>
+    <div class="wrap">
+        <h1>Fortnite Stats Debug Logs</h1>
+        
+        <form method="post">
+            <?php wp_nonce_field('fortnite_stats_clear_logs'); ?>
+            <input type="submit" name="clear_logs" class="button button-secondary" value="Clear Logs">
+        </form>
+        
+        <div class="log-container" style="margin-top: 20px; background: #f8f9fa; padding: 15px; border-radius: 5px;">
+            <?php if (empty($logs)): ?>
+                <p>No logs available.</p>
+            <?php else: ?>
+                <?php foreach (array_reverse($logs) as $entry): ?>
+                    <div class="log-entry <?php echo esc_attr($entry['type']); ?>" style="margin-bottom: 10px; padding: 10px; border-radius: 4px; background: <?php echo ($entry['type'] === 'error') ? '#ffebee' : '#f5f5f5'; ?>;">
+                        <div>[<?php echo esc_html($entry['time']); ?>] <strong><?php echo strtoupper(esc_html($entry['type'])); ?></strong>: <?php echo esc_html($entry['message']); ?></div>
+                        <?php if (!empty($entry['data'])): ?>
+                            <pre style="margin: 5px 0 0; padding: 8px; background: rgba(255,255,255,0.7); font-size: 12px; overflow-x: auto;"><?php echo esc_html(is_string($entry['data']) ? $entry['data'] : json_encode($entry['data'], JSON_PRETTY_PRINT)); ?></pre>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php
+}
+
+// Добавление страницы отладки в меню
+function fortnite_stats_add_debug_menu() {
+    if (get_option('fortnite_stats_debug_mode') == '1' && current_user_can('manage_options')) {
+        add_submenu_page(
+            'options-general.php',
+            'Fortnite Stats Debug',
+            'Fortnite Stats Debug',
+            'manage_options',
+            'fortnite-stats-debug',
+            'fortnite_stats_debug_page'
+        );
+    }
+}
+add_action('admin_menu', 'fortnite_stats_add_debug_menu');
