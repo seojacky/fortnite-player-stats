@@ -139,7 +139,7 @@ function fortnite_stats_get_auth_token() {
     }
     
     // Формируем запрос на получение токена
-    $auth_url = 'https://api.epicgames.dev/auth/v1/oauth/token';
+    $auth_url = 'https://api.epicgames.dev/auth/v2/oauth/token';
     $auth_headers = array(
         'Content-Type' => 'application/x-www-form-urlencoded',
         'Authorization' => 'Basic ' . base64_encode($client_id . ':' . $client_secret)
