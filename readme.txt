@@ -3,7 +3,7 @@ Contributors: yourname
 Tags: fortnite, stats, gaming, epic games, battle royale
 Requires at least: 5.0
 Tested up to: 6.4.3
-Stable tag: 2.1
+Stable tag: 3.0
 License: GPL v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,6 +57,20 @@ No, this plugin is not affiliated with, endorsed by, or connected to Epic Games 
 3. Debug logs for troubleshooting
 
 == Changelog ==
+= 3.0 =
+* Added full multilingual support with translation-ready strings
+* Restructured plugin code for better maintainability
+* Split plugin into separate files for core functionality and settings
+* Added JavaScript localization for frontend text strings
+* Added translations for all UI elements, error messages and statistics
+* Applied translation functions to all user-facing text
+* Improved code organization with constants for paths and URLs
+* Updated enqueue scripts function with version constants
+* Optimized file structure for easier customization
+* Added comprehensive text domain loading for Loco Translate compatibility
+* Improved error message handling with translations
+* Added translation support for the statistics display interface
+
 = 2.1 =
 * Added player avatars based on Fortnite default skins
 * Improved form layout with all elements in a single row
