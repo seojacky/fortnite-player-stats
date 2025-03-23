@@ -7,7 +7,7 @@ jQuery(document).ready(function($) {
         var timeWindow = $('#fortnite-timewindow').val();
         
         // Показываем загрузочное сообщение
-        $('#fortnite-stats-results').html('<div class="loading">Loading stats...</div>').show();
+        $('#fortnite-stats-results').html('<div class="loading">' + fortniteStats.i18n.loading + '</div>').show();
         $('#fortnite-stats-error').hide();
         
         // Отправляем AJAX запрос
@@ -26,12 +26,12 @@ jQuery(document).ready(function($) {
                     displayStats(response.data);
                 } else {
                     $('#fortnite-stats-results').hide();
-                    $('#fortnite-stats-error').html(response.data.message || 'Error retrieving data.').show();
+                    $('#fortnite-stats-error').html(response.data.message || fortniteStats.i18n.errorRetrieving).show();
                 }
             },
             error: function() {
                 $('#fortnite-stats-results').hide();
-                $('#fortnite-stats-error').html('Network error. Please try again.').show();
+                $('#fortnite-stats-error').html(fortniteStats.i18n.networkError).show();
             }
         });
     });
@@ -41,7 +41,7 @@ jQuery(document).ready(function($) {
         // Если нет данных для отображения
         if (!stats || !stats.account) {
             $('#fortnite-stats-results').hide();
-            $('#fortnite-stats-error').html('No available data for this player.').show();
+            $('#fortnite-stats-error').html(fortniteStats.i18n.noAvailableData).show();
             return;
         }
         
@@ -61,19 +61,19 @@ jQuery(document).ready(function($) {
         
         html += '<div class="player-details">' +
                 '<div class="player-name">' + stats.account.name + '</div>' +
-                '<div class="player-level">Level ' + stats.account.level + '</div>' +
+                '<div class="player-level">' + fortniteStats.i18n.level + ' ' + stats.account.level + '</div>' +
                 '</div>' +
                 '</div>';
         
         // Battle Pass
         html += '<div class="battle-pass">' +
-                '<h3>Battle Pass</h3>' +
+                '<h3>' + fortniteStats.i18n.battlePass + '</h3>' +
                 '<div class="stat-row">' +
-                '<div class="stat-label">Level</div>' +
+                '<div class="stat-label">' + fortniteStats.i18n.level + '</div>' +
                 '<div class="stat-value">' + stats.battlePass.level + '</div>' +
                 '</div>' +
                 '<div class="stat-row">' +
-                '<div class="stat-label">Progress</div>' +
+                '<div class="stat-label">' + fortniteStats.i18n.progress + '</div>' +
                 '<div class="stat-value">' + stats.battlePass.progress + '%</div>' +
                 '</div>' +
                 '</div>';
@@ -84,25 +84,25 @@ jQuery(document).ready(function($) {
         // Соло статистика
         if (stats.matches.solo > 0) {
             html += '<div class="stats-card">' +
-                    '<h3>Solo</h3>' +
+                    '<h3>' + fortniteStats.i18n.solo + '</h3>' +
                     '<div class="stat-row">' +
-                    '<div class="stat-label">Wins</div>' +
+                    '<div class="stat-label">' + fortniteStats.i18n.wins + '</div>' +
                     '<div class="stat-value">' + stats.wins.solo + '</div>' +
                     '</div>' +
                     '<div class="stat-row">' +
-                    '<div class="stat-label">Matches</div>' +
+                    '<div class="stat-label">' + fortniteStats.i18n.matches + '</div>' +
                     '<div class="stat-value">' + stats.matches.solo + '</div>' +
                     '</div>' +
                     '<div class="stat-row">' +
-                    '<div class="stat-label">Win Rate</div>' +
+                    '<div class="stat-label">' + fortniteStats.i18n.winRate + '</div>' +
                     '<div class="stat-value">' + stats.winRate.solo.toFixed(1) + '%</div>' +
                     '</div>' +
                     '<div class="stat-row">' +
-                    '<div class="stat-label">K/D Ratio</div>' +
+                    '<div class="stat-label">' + fortniteStats.i18n.kdRatio + '</div>' +
                     '<div class="stat-value">' + stats.kd.solo.toFixed(2) + '</div>' +
                     '</div>' +
                     '<div class="stat-row">' +
-                    '<div class="stat-label">Kills</div>' +
+                    '<div class="stat-label">' + fortniteStats.i18n.kills + '</div>' +
                     '<div class="stat-value">' + stats.kills.solo + '</div>' +
                     '</div>' +
                     '</div>';
@@ -111,25 +111,25 @@ jQuery(document).ready(function($) {
         // Дуо статистика
         if (stats.matches.duo > 0) {
             html += '<div class="stats-card">' +
-                    '<h3>Duo</h3>' +
+                    '<h3>' + fortniteStats.i18n.duo + '</h3>' +
                     '<div class="stat-row">' +
-                    '<div class="stat-label">Wins</div>' +
+                    '<div class="stat-label">' + fortniteStats.i18n.wins + '</div>' +
                     '<div class="stat-value">' + stats.wins.duo + '</div>' +
                     '</div>' +
                     '<div class="stat-row">' +
-                    '<div class="stat-label">Matches</div>' +
+                    '<div class="stat-label">' + fortniteStats.i18n.matches + '</div>' +
                     '<div class="stat-value">' + stats.matches.duo + '</div>' +
                     '</div>' +
                     '<div class="stat-row">' +
-                    '<div class="stat-label">Win Rate</div>' +
+                    '<div class="stat-label">' + fortniteStats.i18n.winRate + '</div>' +
                     '<div class="stat-value">' + stats.winRate.duo.toFixed(1) + '%</div>' +
                     '</div>' +
                     '<div class="stat-row">' +
-                    '<div class="stat-label">K/D Ratio</div>' +
+                    '<div class="stat-label">' + fortniteStats.i18n.kdRatio + '</div>' +
                     '<div class="stat-value">' + stats.kd.duo.toFixed(2) + '</div>' +
                     '</div>' +
                     '<div class="stat-row">' +
-                    '<div class="stat-label">Kills</div>' +
+                    '<div class="stat-label">' + fortniteStats.i18n.kills + '</div>' +
                     '<div class="stat-value">' + stats.kills.duo + '</div>' +
                     '</div>' +
                     '</div>';
@@ -138,25 +138,25 @@ jQuery(document).ready(function($) {
         // Отряд статистика
         if (stats.matches.squad > 0) {
             html += '<div class="stats-card">' +
-                    '<h3>Squad</h3>' +
+                    '<h3>' + fortniteStats.i18n.squad + '</h3>' +
                     '<div class="stat-row">' +
-                    '<div class="stat-label">Wins</div>' +
+                    '<div class="stat-label">' + fortniteStats.i18n.wins + '</div>' +
                     '<div class="stat-value">' + stats.wins.squad + '</div>' +
                     '</div>' +
                     '<div class="stat-row">' +
-                    '<div class="stat-label">Matches</div>' +
+                    '<div class="stat-label">' + fortniteStats.i18n.matches + '</div>' +
                     '<div class="stat-value">' + stats.matches.squad + '</div>' +
                     '</div>' +
                     '<div class="stat-row">' +
-                    '<div class="stat-label">Win Rate</div>' +
+                    '<div class="stat-label">' + fortniteStats.i18n.winRate + '</div>' +
                     '<div class="stat-value">' + stats.winRate.squad.toFixed(1) + '%</div>' +
                     '</div>' +
                     '<div class="stat-row">' +
-                    '<div class="stat-label">K/D Ratio</div>' +
+                    '<div class="stat-label">' + fortniteStats.i18n.kdRatio + '</div>' +
                     '<div class="stat-value">' + stats.kd.squad.toFixed(2) + '</div>' +
                     '</div>' +
                     '<div class="stat-row">' +
-                    '<div class="stat-label">Kills</div>' +
+                    '<div class="stat-label">' + fortniteStats.i18n.kills + '</div>' +
                     '<div class="stat-value">' + stats.kills.squad + '</div>' +
                     '</div>' +
                     '</div>';
@@ -164,25 +164,25 @@ jQuery(document).ready(function($) {
         
         // Общая статистика
         html += '<div class="stats-card">' +
-                '<h3>Overall</h3>' +
+                '<h3>' + fortniteStats.i18n.overall + '</h3>' +
                 '<div class="stat-row">' +
-                '<div class="stat-label">Total Wins</div>' +
+                '<div class="stat-label">' + fortniteStats.i18n.totalWins + '</div>' +
                 '<div class="stat-value">' + stats.wins.total + '</div>' +
                 '</div>' +
                 '<div class="stat-row">' +
-                '<div class="stat-label">Total Matches</div>' +
+                '<div class="stat-label">' + fortniteStats.i18n.totalMatches + '</div>' +
                 '<div class="stat-value">' + stats.matches.total + '</div>' +
                 '</div>' +
                 '<div class="stat-row">' +
-                '<div class="stat-label">Win Rate</div>' +
+                '<div class="stat-label">' + fortniteStats.i18n.winRate + '</div>' +
                 '<div class="stat-value">' + stats.winRate.total.toFixed(1) + '%</div>' +
                 '</div>' +
                 '<div class="stat-row">' +
-                '<div class="stat-label">K/D Ratio</div>' +
+                '<div class="stat-label">' + fortniteStats.i18n.kdRatio + '</div>' +
                 '<div class="stat-value">' + stats.kd.total.toFixed(2) + '</div>' +
                 '</div>' +
                 '<div class="stat-row">' +
-                '<div class="stat-label">Total Kills</div>' +
+                '<div class="stat-label">' + fortniteStats.i18n.totalKills + '</div>' +
                 '<div class="stat-value">' + stats.kills.total + '</div>' +
                 '</div>' +
                 '</div>';
@@ -192,7 +192,7 @@ jQuery(document).ready(function($) {
         // Информация о кэшировании
         if (stats.cached) {
             var cacheDate = new Date(stats.cacheTime * 1000);
-            html += '<div class="cache-info">Data updated: ' + cacheDate.toLocaleString() + '</div>';
+            html += '<div class="cache-info">' + fortniteStats.i18n.dataUpdated + ': ' + cacheDate.toLocaleString() + '</div>';
         }
         
         $('#fortnite-stats-results').html(html).show();

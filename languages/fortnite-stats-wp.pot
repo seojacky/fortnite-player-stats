@@ -1,0 +1,257 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Fortnite Player Stats\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-23 20:54+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.7.1; wp-6.7.2\n"
+"X-Domain: fortnite-stats-wp"
+
+#: fortnite-stats-wp.php:469
+msgid "Account not found. Please check the username and try again."
+msgstr ""
+
+#: fortnite-stats-wp.php:87
+msgid "Account Type:"
+msgstr ""
+
+#: settings.php:46
+msgid "API Key"
+msgstr ""
+
+#: fortnite-stats-wp.php:177
+msgid "API key is not set. Please configure the plugin in admin settings."
+msgstr ""
+
+#: fortnite-stats-wp.php:48
+msgid "Battle Pass"
+msgstr ""
+
+#: settings.php:50
+msgid "Cache Time (seconds)"
+msgstr ""
+
+#: settings.php:66
+msgid ""
+"Cache time is specified in seconds. A value between 300 (5 minutes) and 3600 "
+"(1 hour) is recommended to reduce load on the API."
+msgstr ""
+
+#: settings.php:93
+msgid "Clear Logs"
+msgstr ""
+
+#: fortnite-stats-wp.php:99
+msgid "Current Season"
+msgstr ""
+
+#: fortnite-stats-wp.php:62
+msgid "Data updated"
+msgstr ""
+
+#: settings.php:82
+msgid "Debug logs cleared successfully."
+msgstr ""
+
+#: settings.php:54
+msgid "Debug Mode"
+msgstr ""
+
+#. Description of the plugin
+msgid "Displays Fortnite player statistics using Fortnite-API.com"
+msgstr ""
+
+#: fortnite-stats-wp.php:51
+msgid "Duo"
+msgstr ""
+
+#: settings.php:58
+msgid "Enable debug logs"
+msgstr ""
+
+#: settings.php:64
+msgid "Enter API Key for access to Fortnite-API.com. You can get the key at"
+msgstr ""
+
+#: fortnite-stats-wp.php:89
+msgid "Epic"
+msgstr ""
+
+#: fortnite-stats-wp.php:44
+msgid "Error retrieving data."
+msgstr ""
+
+#: fortnite-stats-wp.php:198
+msgid "Error:"
+msgstr ""
+
+#: fortnite-stats-wp.php:209
+msgid "Failed to retrieve stats"
+msgstr ""
+
+#: fortnite-stats-wp.php:107
+msgid ""
+"For PlayStation and Xbox searches, you must use the actual PSN/Xbox Live "
+"username, which may differ from the Epic Games username."
+msgstr ""
+
+#. Name of the plugin
+#: fortnite-stats-wp.php:79
+msgid "Fortnite Player Stats"
+msgstr ""
+
+#: settings.php:29
+msgid "Fortnite Stats"
+msgstr ""
+
+#: settings.php:119 settings.php:120
+msgid "Fortnite Stats Debug"
+msgstr ""
+
+#: settings.php:89
+msgid "Fortnite Stats Debug Logs"
+msgstr ""
+
+#: settings.php:28 settings.php:41
+msgid "Fortnite Stats Settings"
+msgstr ""
+
+#: fortnite-stats-wp.php:103
+msgid "Get Stats"
+msgstr ""
+
+#. URI of the plugin
+msgid "https://github.com/seojacky/fortnite-stats-wp"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://t.me/big_jacky"
+msgstr ""
+
+#: fortnite-stats-wp.php:57
+msgid "K/D Ratio"
+msgstr ""
+
+#: fortnite-stats-wp.php:58
+msgid "Kills"
+msgstr ""
+
+#: fortnite-stats-wp.php:47
+msgid "Level"
+msgstr ""
+
+#: fortnite-stats-wp.php:98
+msgid "Lifetime"
+msgstr ""
+
+#: fortnite-stats-wp.php:43
+msgid "Loading stats..."
+msgstr ""
+
+#: fortnite-stats-wp.php:55
+msgid "Matches"
+msgstr ""
+
+#: fortnite-stats-wp.php:45
+msgid "Network error. Please try again."
+msgstr ""
+
+#: fortnite-stats-wp.php:46
+msgid "No available data for this player."
+msgstr ""
+
+#: settings.php:98
+msgid "No logs available."
+msgstr ""
+
+#: settings.php:66 fortnite-stats-wp.php:107
+msgid "Note:"
+msgstr ""
+
+#: fortnite-stats-wp.php:53
+msgid "Overall"
+msgstr ""
+
+#: fortnite-stats-wp.php:90
+msgid "PlayStation"
+msgstr ""
+
+#: fortnite-stats-wp.php:465
+msgid ""
+"PlayStation Network account not found. Try searching by Epic Games username "
+"instead."
+msgstr ""
+
+#: fortnite-stats-wp.php:49
+msgid "Progress"
+msgstr ""
+
+#: fortnite-stats-wp.php:429
+msgid "Security check failed"
+msgstr ""
+
+#. Author of the plugin
+msgid "seo_jacky"
+msgstr ""
+
+#: fortnite-stats-wp.php:50
+msgid "Solo"
+msgstr ""
+
+#: fortnite-stats-wp.php:52
+msgid "Squad"
+msgstr ""
+
+#: fortnite-stats-wp.php:96
+msgid "Time Window:"
+msgstr ""
+
+#: fortnite-stats-wp.php:61
+msgid "Total Kills"
+msgstr ""
+
+#: fortnite-stats-wp.php:60
+msgid "Total Matches"
+msgstr ""
+
+#: fortnite-stats-wp.php:59
+msgid "Total Wins"
+msgstr ""
+
+#: fortnite-stats-wp.php:83
+msgid "Username"
+msgstr ""
+
+#: fortnite-stats-wp.php:439
+msgid "Username is required"
+msgstr ""
+
+#: fortnite-stats-wp.php:82
+msgid "Username:"
+msgstr ""
+
+#: fortnite-stats-wp.php:56
+msgid "Win Rate"
+msgstr ""
+
+#: fortnite-stats-wp.php:54
+msgid "Wins"
+msgstr ""
+
+#: fortnite-stats-wp.php:91
+msgid "Xbox"
+msgstr ""
+
+#: fortnite-stats-wp.php:467
+msgid ""
+"Xbox Live account not found. Try searching by Epic Games username instead."
+msgstr ""
