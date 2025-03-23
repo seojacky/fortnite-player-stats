@@ -57,7 +57,7 @@ If you encounter issues with the plugin:
 ## Examples
     `https://fortnite-api.com/v2/cosmetics/br/search?matchMethod=contains&name=Default`
 
-    ```
+    ```json
     {
   "status": 200,
   "data": {
