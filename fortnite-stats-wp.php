@@ -1,11 +1,14 @@
 <?php
 /**
- * Plugin Name: Fortnite Player Stats
- * Plugin URI: https://yourwebsite.com/fortnite-stats-wp
+ * Plugin Name: Fortnite Player Stats 
  * Description: Displays Fortnite player statistics using Fortnite-API.com
  * Version: 2.0
- * Author: Your Name
- * Author URI: https://yourwebsite.com
+ * Author: seo_jacky
+ * Author URI: https://t.me/big_jacky
+ * Plugin URI: https://github.com/seojacky/fortnite-stats-wp
+ * GitHub Plugin URI: https://github.com/seojacky/fortnite-stats-wp
+ * Text Domain: fortnite-stats-wp
+ * Domain Path: /languages
  * License: GPL2
  */
 
