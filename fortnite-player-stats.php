@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Определяем константы плагина
-define('FORTNITE_STATS_VERSION', '3.0');
+define('FORTNITE_STATS_VERSION', '4.0');
 define('FORTNITE_STATS_PATH', plugin_dir_path(__FILE__));
 define('FORTNITE_STATS_URL', plugin_dir_url(__FILE__));
 
