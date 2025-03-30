@@ -3,7 +3,7 @@ Contributors: yourname
 Tags: fortnite, stats, gaming, epic games, battle royale
 Requires at least: 5.0
 Tested up to: 6.4.3
-Stable tag: 3.0
+Stable tag: 4.0
 License: GPL v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,6 +57,16 @@ No, this plugin is not affiliated with, endorsed by, or connected to Epic Games 
 3. Debug logs for troubleshooting
 
 == Changelog ==
+= 4.0 - 30.03.25 =
+* Changed plugin URL to fortnite-player-stats
+* Added optimization for plugin script loading - now only loads on pages with shortcode
+* Improved caching compatibility with instructions for cache plugins
+* Added direct link to plugin settings on the plugins page
+* Fixed security nonce issues with cached pages
+* Added API testing instructions in documentation
+* Enhanced error messages for better user experience
+* Performance improvements for sites with caching enabled
+
 = 3.0 =
 * Added full multilingual support with translation-ready strings
 * Restructured plugin code for better maintainability

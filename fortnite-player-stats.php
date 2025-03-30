@@ -2,12 +2,12 @@
 /**
  * Plugin Name: Fortnite Player Stats 
  * Description: Displays Fortnite player statistics using Fortnite-API.com
- * Version: 3.0
+ * Version: 4.0
  * Author: seo_jacky
  * Author URI: https://t.me/big_jacky
- * Plugin URI: https://github.com/seojacky/fortnite-stats-wp
- * GitHub Plugin URI: https://github.com/seojacky/fortnite-stats-wp
- * Text Domain: fortnite-stats-wp
+ * Plugin URI: https://github.com/seojacky/fortnite-player-stats
+ * GitHub Plugin URI: https://github.com/seojacky/fortnite-player-stats
+ * Text Domain: fortnite-player-stats
  * Domain Path: /languages
  * License: GPL2
  */
@@ -18,17 +18,39 @@ if (!defined('ABSPATH')) {
 }
 
 // Определяем константы плагина
-define('FORTNITE_STATS_VERSION', '3.0');
+define('FORTNITE_STATS_VERSION', '4.0');
 define('FORTNITE_STATS_PATH', plugin_dir_path(__FILE__));
 define('FORTNITE_STATS_URL', plugin_dir_url(__FILE__));
+
+
+// Получаем базовое имя файла плагина для фильтра
+$plugin_base_name = plugin_basename(__FILE__);
+add_filter("plugin_action_links_{$plugin_base_name}", 'fortnite_stats_add_settings_link');
+
+
+// Определяем базовое имя плагина для повторного использования
+$fortnite_stats_base_name = plugin_basename(__FILE__);
 
 /**
  * Загрузка текстового домена для перевода плагина
  */
 function fortnite_stats_load_textdomain() {
-    load_plugin_textdomain('fortnite-stats-wp', false, dirname(plugin_basename(__FILE__)) . '/languages');
+    global $fortnite_stats_base_name;
+    load_plugin_textdomain('fortnite-player-stats', false, dirname($fortnite_stats_base_name) . '/languages');
 }
 add_action('plugins_loaded', 'fortnite_stats_load_textdomain');
+
+/**
+ * Добавляет ссылку "Настройки" на странице плагинов
+ */
+function fortnite_stats_add_settings_link($links) {
+    $settings_link = '<a href="' . admin_url('options-general.php?page=fortnite-stats') . '">' . __('Settings', 'fortnite-stats-wp') . '</a>';
+    array_unshift($links, $settings_link);
+    return $links;
+}
+
+// Используем сохраненное базовое имя плагина
+add_filter("plugin_action_links_{$fortnite_stats_base_name}", 'fortnite_stats_add_settings_link');
 
 // Подключаем файл настроек
 require_once FORTNITE_STATS_PATH . 'settings.php';
@@ -40,26 +62,26 @@ function fortnite_stats_enqueue_scripts() {
     
     // Массив строк для перевода в JavaScript
     $i18n_strings = array(
-        'loading' => __('Loading stats...', 'fortnite-stats-wp'),
-        'errorRetrieving' => __('Error retrieving data.', 'fortnite-stats-wp'),
-        'networkError' => __('Network error. Please try again.', 'fortnite-stats-wp'),
-        'noAvailableData' => __('No available data for this player.', 'fortnite-stats-wp'),
-        'level' => __('Level', 'fortnite-stats-wp'),
-        'battlePass' => __('Battle Pass', 'fortnite-stats-wp'),
-        'progress' => __('Progress', 'fortnite-stats-wp'),
-        'solo' => __('Solo', 'fortnite-stats-wp'),
-        'duo' => __('Duo', 'fortnite-stats-wp'),
-        'squad' => __('Squad', 'fortnite-stats-wp'),
-        'overall' => __('Overall', 'fortnite-stats-wp'),
-        'wins' => __('Wins', 'fortnite-stats-wp'),
-        'matches' => __('Matches', 'fortnite-stats-wp'),
-        'winRate' => __('Win Rate', 'fortnite-stats-wp'),
-        'kdRatio' => __('K/D Ratio', 'fortnite-stats-wp'),
-        'kills' => __('Kills', 'fortnite-stats-wp'),
-        'totalWins' => __('Total Wins', 'fortnite-stats-wp'),
-        'totalMatches' => __('Total Matches', 'fortnite-stats-wp'),
-        'totalKills' => __('Total Kills', 'fortnite-stats-wp'),
-        'dataUpdated' => __('Data updated', 'fortnite-stats-wp')
+        'loading' => __('Loading stats...', 'fortnite-player-stats'),
+        'errorRetrieving' => __('Error retrieving data.', 'fortnite-player-stats'),
+        'networkError' => __('Network error. Please try again.', 'fortnite-player-stats'),
+        'noAvailableData' => __('No available data for this player.', 'fortnite-player-stats'),
+        'level' => __('Level', 'fortnite-player-stats'),
+        'battlePass' => __('Battle Pass', 'fortnite-player-stats'),
+        'progress' => __('Progress', 'fortnite-player-stats'),
+        'solo' => __('Solo', 'fortnite-player-stats'),
+        'duo' => __('Duo', 'fortnite-player-stats'),
+        'squad' => __('Squad', 'fortnite-player-stats'),
+        'overall' => __('Overall', 'fortnite-player-stats'),
+        'wins' => __('Wins', 'fortnite-player-stats'),
+        'matches' => __('Matches', 'fortnite-player-stats'),
+        'winRate' => __('Win Rate', 'fortnite-player-stats'),
+        'kdRatio' => __('K/D Ratio', 'fortnite-player-stats'),
+        'kills' => __('Kills', 'fortnite-player-stats'),
+        'totalWins' => __('Total Wins', 'fortnite-player-stats'),
+        'totalMatches' => __('Total Matches', 'fortnite-player-stats'),
+        'totalKills' => __('Total Kills', 'fortnite-player-stats'),
+        'dataUpdated' => __('Data updated', 'fortnite-player-stats')
     );
     
     wp_localize_script('fortnite-stats-script', 'fortniteStats', array(
@@ -76,35 +98,35 @@ function fortnite_stats_shortcode() {
     ob_start();
     ?>
 <div class="fortnite-stats-container">
-    <h2><?php _e('Fortnite Player Stats', 'fortnite-stats-wp'); ?></h2>
+    <h2><?php _e('Fortnite Player Stats', 'fortnite-player-stats'); ?></h2>
     <form id="fortnite-stats-form" class="fortnite-stats-form">
         <div class="form-group">
-            <label for="fortnite-username" class="visually-hidden"><?php _e('Username:', 'fortnite-stats-wp'); ?></label>
-            <input type="text" id="fortnite-username" name="username" placeholder="<?php _e('Username', 'fortnite-stats-wp'); ?>" required>
+            <label for="fortnite-username" class="visually-hidden"><?php _e('Username:', 'fortnite-player-stats'); ?></label>
+            <input type="text" id="fortnite-username" name="username" placeholder="<?php _e('Username', 'fortnite-player-stats'); ?>" required>
         </div>
         
         <div class="form-group">
-            <label for="fortnite-platform" class="visually-hidden"><?php _e('Account Type:', 'fortnite-stats-wp'); ?></label>
+            <label for="fortnite-platform" class="visually-hidden"><?php _e('Account Type:', 'fortnite-player-stats'); ?></label>
             <select id="fortnite-platform" name="accountType" required>
-                <option value="epic"><?php _e('Epic', 'fortnite-stats-wp'); ?></option>
-                <option value="psn"><?php _e('PlayStation', 'fortnite-stats-wp'); ?></option>
-                <option value="xbl"><?php _e('Xbox', 'fortnite-stats-wp'); ?></option>
+                <option value="epic"><?php _e('Epic', 'fortnite-player-stats'); ?></option>
+                <option value="psn"><?php _e('PlayStation', 'fortnite-player-stats'); ?></option>
+                <option value="xbl"><?php _e('Xbox', 'fortnite-player-stats'); ?></option>
             </select>
         </div>
         
         <div class="form-group">
-            <label for="fortnite-timewindow" class="visually-hidden"><?php _e('Time Window:', 'fortnite-stats-wp'); ?></label>
+            <label for="fortnite-timewindow" class="visually-hidden"><?php _e('Time Window:', 'fortnite-player-stats'); ?></label>
             <select id="fortnite-timewindow" name="timeWindow">
-                <option value="lifetime"><?php _e('Lifetime', 'fortnite-stats-wp'); ?></option>
-                <option value="season"><?php _e('Current Season', 'fortnite-stats-wp'); ?></option>
+                <option value="lifetime"><?php _e('Lifetime', 'fortnite-player-stats'); ?></option>
+                <option value="season"><?php _e('Current Season', 'fortnite-player-stats'); ?></option>
             </select>
         </div>
         
-        <button type="submit" class="fortnite-stats-submit"><?php _e('Get Stats', 'fortnite-stats-wp'); ?></button>
+        <button type="submit" class="fortnite-stats-submit"><?php _e('Get Stats', 'fortnite-player-stats'); ?></button>
     </form>
     
     <div class="form-notice">
-        <strong><?php _e('Note:', 'fortnite-stats-wp'); ?></strong> <?php _e('For PlayStation and Xbox searches, you must use the actual PSN/Xbox Live username, which may differ from the Epic Games username.', 'fortnite-stats-wp'); ?>
+        <strong><?php _e('Note:', 'fortnite-player-stats'); ?></strong> <?php _e('For PlayStation and Xbox searches, you must use the actual PSN/Xbox Live username, which may differ from the Epic Games username.', 'fortnite-player-stats'); ?>
     </div>
     
     <div id="fortnite-stats-results" class="fortnite-stats-results"></div>
@@ -174,7 +196,7 @@ function fortnite_stats_get_player_stats($username, $accountType, $timeWindow) {
     
     if (empty($api_key)) {
         fortnite_stats_log('error', 'API key is not set');
-        return array('error' => __('API key is not set. Please configure the plugin in admin settings.', 'fortnite-stats-wp'));
+        return array('error' => __('API key is not set. Please configure the plugin in admin settings.', 'fortnite-player-stats'));
     }
     
     fortnite_stats_log('info', "Getting stats for player: {$username}, account type: {$accountType}, time window: {$timeWindow}");
@@ -195,7 +217,7 @@ function fortnite_stats_get_player_stats($username, $accountType, $timeWindow) {
     
     if (is_wp_error($response)) {
         fortnite_stats_log('error', 'WP error during stats retrieval', $response->get_error_message());
-        return array('error' => __("Error:", 'fortnite-stats-wp') . " " . $response->get_error_message());
+        return array('error' => __("Error:", 'fortnite-player-stats') . " " . $response->get_error_message());
     }
     
     $status = wp_remote_retrieve_response_code($response);
@@ -206,7 +228,7 @@ function fortnite_stats_get_player_stats($username, $accountType, $timeWindow) {
     $stats_data = json_decode($body, true);
     
     if ($status != 200 || !isset($stats_data['data'])) {
-        $error_message = __('Failed to retrieve stats', 'fortnite-stats-wp');
+        $error_message = __('Failed to retrieve stats', 'fortnite-player-stats');
         
         if (isset($stats_data['error'])) {
             if (is_string($stats_data['error'])) {
@@ -426,7 +448,7 @@ function fortnite_stats_format_time($minutes) {
 function fortnite_stats_ajax_handler() {
     // Проверка nonce
     if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'fortnite-stats-nonce')) {
-        wp_send_json_error(array('message' => __('Security check failed', 'fortnite-stats-wp')));
+        wp_send_json_error(array('message' => __('Security check failed', 'fortnite-player-stats')));
         wp_die();
     }
     
@@ -436,7 +458,7 @@ function fortnite_stats_ajax_handler() {
     $timeWindow = isset($_POST['timeWindow']) ? sanitize_text_field($_POST['timeWindow']) : 'lifetime';
     
     if (empty($username)) {
-        wp_send_json_error(array('message' => __('Username is required', 'fortnite-stats-wp')));
+        wp_send_json_error(array('message' => __('Username is required', 'fortnite-player-stats')));
         wp_die();
     }
     
@@ -462,11 +484,11 @@ function fortnite_stats_ajax_handler() {
         // Улучшенные сообщения об ошибках
         if (strpos($error_message, 'account does not exist') !== false) {
             if ($accountType === 'psn') {
-                $error_message = __('PlayStation Network account not found. Try searching by Epic Games username instead.', 'fortnite-stats-wp');
+                $error_message = __('PlayStation Network account not found. Try searching by Epic Games username instead.', 'fortnite-player-stats');
             } elseif ($accountType === 'xbl') {
-                $error_message = __('Xbox Live account not found. Try searching by Epic Games username instead.', 'fortnite-stats-wp');
+                $error_message = __('Xbox Live account not found. Try searching by Epic Games username instead.', 'fortnite-player-stats');
             } else {
-                $error_message = __('Account not found. Please check the username and try again.', 'fortnite-stats-wp');
+                $error_message = __('Account not found. Please check the username and try again.', 'fortnite-player-stats');
             }
         }
         
