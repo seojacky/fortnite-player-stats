@@ -6,6 +6,14 @@ WordPress plugin to display Fortnite player statistics using the Fortnite-API.co
 
 Fortnite Player Stats is a lightweight WordPress plugin that allows website visitors to check statistics for any Fortnite player. The plugin uses the unofficial Fortnite-API.com service to retrieve accurate and up-to-date player information.
 
+> **⚠️ Important Caching Notice:** If you're using a caching plugin such as Fastest Cache, you must exclude the following files/paths from caching to ensure proper functionality:
+> - `/wp-content/plugins/fortnite-stats-wp/assets/js/script.js`
+> - `/wp-admin/admin-ajax.php` (especially for POST requests)
+> 
+> Failure to exclude these paths may result in "Security check failed" errors when trying to retrieve player statistics.
+
+
+
 ## Features
 
 - Display comprehensive player statistics for Fortnite
