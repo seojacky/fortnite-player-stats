@@ -12,7 +12,22 @@ Fortnite Player Stats is a lightweight WordPress plugin that allows website visi
 > 
 > Failure to exclude these paths may result in "Security check failed" errors when trying to retrieve player statistics.
 
+## API Testing
 
+To verify that your API key is working correctly before troubleshooting plugin issues, you can test a direct API request using your browser's developer console:
+
+1. Open your browser's developer tools (F12 or Right-click → Inspect)
+2. Navigate to the Console tab
+3. Copy and paste the following code, replacing `YOUR_API_KEY_HERE` with your Fortnite-API.com API key:
+
+```javascript
+fetch('https://fortnite-api.com/v2/stats/br/v2?name=Daywalker.36&accountType=epic&timeWindow=lifetime', { 
+  headers: { 
+    'Authorization': 'YOUR_API_KEY_HERE' 
+  } 
+})
+.then(response => response.json())
+.then(data => console.log(data));
 
 ## Features
 
