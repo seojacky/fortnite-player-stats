@@ -25,8 +25,8 @@ add_action('admin_init', 'fortnite_stats_register_settings');
 // Добавление страницы настроек в меню
 function fortnite_stats_add_menu() {
     add_options_page(
-        __('Fortnite Stats Settings', 'fortnite-stats-wp'),
-        __('Fortnite Stats', 'fortnite-stats-wp'),
+        __('Fortnite Stats Settings', 'fortnite-player-stats'),
+        __('Fortnite Stats', 'fortnite-player-stats'),
         'manage_options',
         'fortnite-stats',
         'fortnite_stats_settings_page'
@@ -38,32 +38,32 @@ add_action('admin_menu', 'fortnite_stats_add_menu');
 function fortnite_stats_settings_page() {
     ?>
     <div class="wrap">
-        <h1><?php _e('Fortnite Stats Settings', 'fortnite-stats-wp'); ?></h1>
+        <h1><?php _e('Fortnite Stats Settings', 'fortnite-player-stats'); ?></h1>
         <form method="post" action="options.php">
             <?php settings_fields('fortnite_stats_options_group'); ?>
             <table class="form-table">
                 <tr>
-                    <th scope="row"><label for="fortnite_stats_api_key"><?php _e('API Key', 'fortnite-stats-wp'); ?></label></th>
+                    <th scope="row"><label for="fortnite_stats_api_key"><?php _e('API Key', 'fortnite-player-stats'); ?></label></th>
                     <td><input type="text" id="fortnite_stats_api_key" name="fortnite_stats_api_key" value="<?php echo esc_attr(get_option('fortnite_stats_api_key')); ?>" class="regular-text" required /></td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="fortnite_stats_cache_time"><?php _e('Cache Time (seconds)', 'fortnite-stats-wp'); ?></label></th>
+                    <th scope="row"><label for="fortnite_stats_cache_time"><?php _e('Cache Time (seconds)', 'fortnite-player-stats'); ?></label></th>
                     <td><input type="number" id="fortnite_stats_cache_time" name="fortnite_stats_cache_time" value="<?php echo esc_attr(get_option('fortnite_stats_cache_time')); ?>" class="regular-text" required /></td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="fortnite_stats_debug_mode"><?php _e('Debug Mode', 'fortnite-stats-wp'); ?></label></th>
+                    <th scope="row"><label for="fortnite_stats_debug_mode"><?php _e('Debug Mode', 'fortnite-player-stats'); ?></label></th>
                     <td>
                         <label for="fortnite_stats_debug_mode">
                             <input type="checkbox" id="fortnite_stats_debug_mode" name="fortnite_stats_debug_mode" value="1" <?php checked(get_option('fortnite_stats_debug_mode'), '1'); ?> />
-                            <?php _e('Enable debug logs', 'fortnite-stats-wp'); ?>
+                            <?php _e('Enable debug logs', 'fortnite-player-stats'); ?>
                         </label>
                     </td>
                 </tr>
             </table>
             <p class="description">
-                <?php _e('Enter API Key for access to Fortnite-API.com. You can get the key at', 'fortnite-stats-wp'); ?> <a href="https://fortnite-api.com/" target="_blank">Fortnite-API.com</a>.
+                <?php _e('Enter API Key for access to Fortnite-API.com. You can get the key at', 'fortnite-player-stats'); ?> <a href="https://fortnite-api.com/" target="_blank">Fortnite-API.com</a>.
             </p>
-            <p><strong><?php _e('Note:', 'fortnite-stats-wp'); ?></strong> <?php _e('Cache time is specified in seconds. A value between 300 (5 minutes) and 3600 (1 hour) is recommended to reduce load on the API.', 'fortnite-stats-wp'); ?></p>
+            <p><strong><?php _e('Note:', 'fortnite-player-stats'); ?></strong> <?php _e('Cache time is specified in seconds. A value between 300 (5 minutes) and 3600 (1 hour) is recommended to reduce load on the API.', 'fortnite-player-stats'); ?></p>
             <?php submit_button(); ?>
         </form>
     </div>
@@ -79,23 +79,23 @@ function fortnite_stats_debug_page() {
     // Очистка логов, если запрошено
     if (isset($_POST['clear_logs']) && check_admin_referer('fortnite_stats_clear_logs')) {
         delete_option('fortnite_stats_debug_logs');
-        echo '<div class="notice notice-success"><p>' . __('Debug logs cleared successfully.', 'fortnite-stats-wp') . '</p></div>';
+        echo '<div class="notice notice-success"><p>' . __('Debug logs cleared successfully.', 'fortnite-player-stats') . '</p></div>';
     }
     
     // Получение логов
     $logs = get_option('fortnite_stats_debug_logs', array());
     ?>
     <div class="wrap">
-        <h1><?php _e('Fortnite Stats Debug Logs', 'fortnite-stats-wp'); ?></h1>
+        <h1><?php _e('Fortnite Stats Debug Logs', 'fortnite-player-stats'); ?></h1>
         
         <form method="post">
             <?php wp_nonce_field('fortnite_stats_clear_logs'); ?>
-            <input type="submit" name="clear_logs" class="button button-secondary" value="<?php _e('Clear Logs', 'fortnite-stats-wp'); ?>">
+            <input type="submit" name="clear_logs" class="button button-secondary" value="<?php _e('Clear Logs', 'fortnite-player-stats'); ?>">
         </form>
         
         <div class="log-container" style="margin-top: 20px; background: #f8f9fa; padding: 15px; border-radius: 5px;">
             <?php if (empty($logs)): ?>
-                <p><?php _e('No logs available.', 'fortnite-stats-wp'); ?></p>
+                <p><?php _e('No logs available.', 'fortnite-player-stats'); ?></p>
             <?php else: ?>
                 <?php foreach (array_reverse($logs) as $entry): ?>
                     <div class="log-entry <?php echo esc_attr($entry['type']); ?>" style="margin-bottom: 10px; padding: 10px; border-radius: 4px; background: <?php echo ($entry['type'] === 'error') ? '#ffebee' : '#f5f5f5'; ?>;">
@@ -116,8 +116,8 @@ function fortnite_stats_add_debug_menu() {
     if (get_option('fortnite_stats_debug_mode') == '1' && current_user_can('manage_options')) {
         add_submenu_page(
             'options-general.php',
-            __('Fortnite Stats Debug', 'fortnite-stats-wp'),
-            __('Fortnite Stats Debug', 'fortnite-stats-wp'),
+            __('Fortnite Stats Debug', 'fortnite-player-stats'),
+            __('Fortnite Stats Debug', 'fortnite-player-stats'),
             'manage_options',
             'fortnite-stats-debug',
             'fortnite_stats_debug_page'
